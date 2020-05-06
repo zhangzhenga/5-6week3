@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zheng.cms.dao.RoomMapper">
+	<select id="list2" resultType="RoomType">
+		select * from room_type
+	</select>
+	<resultMap type="Room" id="RMap">
+		<result property="creatdate" column="creatdate" />
+		<result property="cphone" column="cphone" />
+		<result property="name" column="name" />
+		<result property="cname" column="cname" />
+		<result property="cbei" column="cbei" />
+		<result property="cprice" column="price" />
+	</resultMap>
+	<select id="list" resultMap="RMap">
+		select * from room_type a LEFT JOIN
+		room_y b on (a.id=b.c_typeid) 
+		<where>
+			<if test="name!=null and name!=''">
+				and cname like '%${name}%'
+			</if>
+			<if test="type!=null and type!=''">
+				and a.name like '%${type}%'
+			</if>
+			<if test="phone!=null and phone!=''">
+				and cphone like '%${phone}%'
+			</if>
+			<if test="p1!=null and p1!=''">
+				and a.price >=${p1}
+			</if>
+			<if test="p2!=null and p2!=''">
+				and a.price &lt;=${p2}
+			</if>
+			<if test="d1!=null and d1!=''">
+				and b.creatdate >='${d1}'
+			</if>
+			<if test="d2!=null and d2!=''">
+				and b.creatdate &lt;='${d2}'
+			</if>
+		</where>
+		ORDER BY b.cid DESC
+	</select>
+	<insert id="insert">
+		insert into room_y set creatdate =#{creatdate},
+		cname =#{cname},cphone=#{cphone},
+		cbei=#{cbei},c_typeid=#{c_typeid}
+	</insert>
+</mapper>	
